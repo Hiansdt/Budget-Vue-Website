@@ -16,13 +16,24 @@ export default {
   setup() {
 
     const state = reactive ({
-      ganho: [],
+      ganho: [{
+        ganho_gasto: 0,
+        value: 200
+      },
+    {
+      ganho_gasto: 1,
+      value: 600,
+    }],
       total: computed(()=> {
         let temp = 0;
 
         if (state.ganho.length > 0) {
           for (let i = 0; i < state.ganho.length; i++) {
-            temp += state.ganho[i].value
+            if(state.ganho[i].ganho_gasto == 1) {
+              temp += state.ganho[i].value
+            } else {
+              temp -= state.ganho[i].value
+            }
           }
         }
 

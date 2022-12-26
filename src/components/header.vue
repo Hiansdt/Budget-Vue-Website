@@ -2,7 +2,7 @@
     <header>
         <h1 class="title">Budget-Tracker</h1>
         <div class="total-sobra">
-            <h2>Total Gasto</h2>
+            <h2>Total</h2>
             <p>R${{ totalSobra }}</p>
         </div>
     </header>
