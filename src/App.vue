@@ -2,6 +2,7 @@
   <div>
     <Header :totalSobra="state.total" />
     <Form @add-value="addValue" />
+    <Lista :state="state" @remove="delItem"/>
   </div>
 </template>
 
@@ -9,40 +10,56 @@
 import Header from './components/header.vue'
 import {reactive, computed} from 'vue'
 import Form from './components/form.vue'
+import Lista from './components/Lista.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
     Form,
+    Lista,
   },
   setup() {
 
     const state = reactive ({
-      ganho: [],
+      quantia: [],
       total: computed(()=> {
         let temp = 0;
 
-        if (state.ganho.length > 0) {
-          for (let i = 0; i < state.ganho.length; i++) {
-            if(state.ganho[i].ganho_gasto == "1") {
-              temp += state.ganho[i].value
+        if (state.quantia.length > 0) {
+          
+          for (let i = 0; i < state.quantia.length; i++) {
+            if(state.quantia[i].ganho_gasto == "1") {
+              temp += state.quantia[i].value
             } else {
-              temp -= state.ganho[i].value
+              temp -= state.quantia[i].value
             }
           }
         }
 
         return temp
+      }),
+      quantiaOrganizada: computed(() => {
+        let temp = [];
+        
+        temp = state.quantia.sort(function(a, b) {
+          return b.date - a.date;
+        })
+
+        return temp;
       })
     });
+
+    if (JSON.parse(localStorage.getItem('quant'))[0]) {
+      state.quantia = (JSON.parse(localStorage.getItem('quant')))
+    }
 
     function addValue(data) {
 
       let d = data.date.split('-');
       let newD = new Date(d[0], d[1], d[2])
 
-      state.ganho = [...state.ganho, {
+      state.quantia = [...state.quantia, {
         id: Date.now(),
         desc: data.desc,
         value: data.value,
@@ -50,14 +67,21 @@ export default {
         ganho_gasto: data.type,
       }];
 
-      console.log(state.ganho)
+        localStorage.setItem('quant', JSON.stringify(state.quantia));
     }
+
+    function delItem(id) {
+      state.quantia = state.quantia.filter(v => v.id != id);
+      localStorage.setItem('quant', JSON.stringify(state.quantia));
+    };
 
     return {
       Header,
       state,
       Form,
       addValue,
+      Lista,
+      delItem,
     }
   }
 }
