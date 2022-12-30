@@ -50,7 +50,7 @@ export default {
       })
     });
 
-    if (JSON.parse(localStorage.getItem('quant'))[0]) {
+    if (JSON.parse(localStorage.getItem('quant'))) {
       state.quantia = (JSON.parse(localStorage.getItem('quant')))
     }
 
